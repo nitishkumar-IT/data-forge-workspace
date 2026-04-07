@@ -4,38 +4,28 @@ from .config import settings
 from .database import Base, engine
 from .routers import auth, projects
 
-app = FastAPI(
-    title=settings.app_name,
-    version="1.0.0"
-)
+app = FastAPI(title=settings.app_name)
 
-# Create DB tables on startup
 @app.on_event("startup")
 def startup():
     Base.metadata.create_all(bind=engine)
 
-# CORS (important for frontend communication)
 origins = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://data-forge-workspace.onrender.com"
+    "http://127.0.0.1:5173"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,   # allowed frontend domains
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Routers
-app.include_router(auth.router, prefix="/api", tags=["Auth"])
-app.include_router(projects.router, prefix="/api", tags=["Projects"])
+app.include_router(auth.router, prefix="/api")
+app.include_router(projects.router, prefix="/api")
 
-# Health check
 @app.get("/api/health")
-def health_check():
-    return {
-        "status": "ok"
-    }
+def health():
+    return {"status":"ok"}
