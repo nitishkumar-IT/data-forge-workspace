@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000/api";
+const API_URL = "https://data-forge-workspace.onrender.com/api";
 
 function getToken() {
   return localStorage.getItem("data_forge_token");
@@ -17,7 +17,7 @@ async function request(path, options = {}) {
   try {
     response = await fetch(`${API_URL}${path}`, { ...options, headers });
   } catch {
-    throw new Error("Backend connection failed. Start the Python API on http://localhost:8000.");
+    throw new Error("Backend connection failed");
   }
   if (!response.ok) {
     const errorBody = await response.json().catch(() => ({}));
